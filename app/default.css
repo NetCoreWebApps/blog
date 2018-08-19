@@ -244,7 +244,7 @@ pre {
 code, kbd, pre, samp {
     font-family: monospace,monospace;
 }
-pre>code, p>code {
+pre>code, p>code:first-child {
     display: block;
     padding: 1em;
     margin-bottom: 1em;
@@ -253,6 +253,7 @@ pre>code, p>code {
 }
 code {
     background-color: #f5f5f5;
+    white-space: pre-wrap;
 }
 blockquote {
     margin: 0 0 10px 0;

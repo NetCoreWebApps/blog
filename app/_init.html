@@ -1,3 +1,7 @@
+<!--
+layout: none
+-->
+
 ================================
 Create blog.sqlite if not exists
 ================================
@@ -35,8 +39,11 @@ Populate with seed posts if empty
 
 {{#if postsCount == 0 }}
 
+    {{ `datetime(CURRENT_TIMESTAMP,'localtime')` | assignTo: sqlNow }}
+    {{ `ServiceStack`                            | assignTo: user }}
+
     ========================
-    Create ServiceStack User - Contains same info as if @ServiceStack authenticated via Twitter
+    Create ServiceStack User - Contains same info as if was @ServiceStack authenticated via Twitter
     ========================
 
     {{ `INSERT INTO UserInfo (UserName, DisplayName, AvatarUrl, AvatarUrlLarge, Created, Modified) 
@@ -49,13 +56,17 @@ Populate with seed posts if empty
     }}
 
 
-    ==========================
-    Live Document Example Post
-    ==========================
-        
-    {{#raw postTitle}}Live Document Example{{/raw}}
+    ===============================================
+    {{ 'Live Document Example' | assignTo: title }}
+    ===============================================
 
-{{#raw content}}<pre>
+{{#raw content}}{{#markdown}}
+All Blog posts have access to [ServiceStack Templates](http://templates.servicestack.net) features which enables they to use a highly-productive, 
+easy to use [sandboxed](http://templates.servicestack.net/docs/sandbox) dynamic templating language which lets you easily create live documents 
+[like this one](/posts/live-document-example):
+{{/markdown}}
+
+<pre>
 {{ 11200 | assignTo: balance }}
 {{ 10    | assignTo: projectedMonths }}
 {{'
@@ -90,17 +101,11 @@ Projected Cash Position:
  | select: { now | addMonths(it) | dateFormat }                    <b>{ totalSavings | multiply(it) | add(balance) | currency }</b>\n }}
 </pre>{{/raw}}
 
-    {{ `datetime(CURRENT_TIMESTAMP,'localtime')` | assignTo: sqlNow }}
+    {{ { title, content } | addTo: initialPosts }}
 
-    {{ `INSERT INTO Post (Slug, Title, Content, Created, CreatedBy, Modified, ModifiedBy) VALUES (@slug, @title, @content, ${sqlNow}, @user, ${sqlNow}, @user)` 
-        | dbExec({ title: postTitle, content, slug: generateSlug(postTitle), user: 'ServiceStack' }) }}
-
-
-    =====================
-    Markdown Example Post
-    =====================
-
-    {{#raw postTitle}}Markdown Example{{/raw}}
+    ==========================================
+    {{ 'Markdown Example' | assignTo: title }}
+    ==========================================
 
 {{#raw content}}{{#markdown}}
 # Headings can start with 1-6 hashes
@@ -132,7 +137,50 @@ Indent lines by 4 spaces to create pre-formatted code blocks in monospace font:
 Follow [link to markdown block docs](http://templates.servicestack.net/docs/blocks#markdown) for more info.
 {{/markdown}}{{/raw}}
 
-    {{ `INSERT INTO Post (Slug, Title, Content, Created, CreatedBy, Modified, ModifiedBy) VALUES (@slug, @title, @content, ${sqlNow}, @user, ${sqlNow}, @user)` 
-        | dbExec({ slug: generateSlug(postTitle), title: postTitle, content, user: 'ServiceStack' }) }}
+    {{ { title, content } | addTo: initialPosts }}
+
+    ============================================
+    {{ 'Page based routing' | assignTo: title }}
+    ============================================
+
+{{#raw content}}{{#markdown}}
+Template Pages supports conventional page-based routes where the name of each page can be requested with or without its **.html** extension:
+
+ - [/db](/db) 
+ - [/db.html](/db.html) 
+   - [/app/db.html](https://github.com/NetCoreWebApps/Blog/blob/master/app/db.html)
+ - [/posts/new](/posts/new) 
+ - [/posts/new.html](/posts/new.html) 
+   - [/app/posts/new.html](https://github.com/NetCoreWebApps/Blog/blob/master/app/posts/new.html)
+
+and the default route **/** maps to the `index.html` in each directory if it exists, e.g:
+
+ - [/](/) 
+  - [/app/index.html](https://github.com/NetCoreWebApps/Blog/blob/master/app/index.html)
+
+Nuxt-like [Dynamic Routes](https://nuxtjs.org/guide/routing#dynamic-routes) can also be used where any **file** or **directory** names prefixed with an **underscore** allows for dynamic wildcard paths with the matching path component also assigned to the arguments name:
+
+ - [/ServiceStack](/) 
+   - [/app/_user/index.html](https://github.com/NetCoreWebApps/Blog/blob/master/app/_user/index.html) user=ServiceStack
+ - [/posts/markdown-example](/posts/markdown-example)
+   - [/app/posts/_slug/index.html](https://github.com/NetCoreWebApps/Blog/blob/master/app/posts/_slug/index.html) slug=markdown-example
+ - [/posts/markdown-example/edit](/posts/markdown-example/edit) 
+   - [/app/posts/_slug/edit.html](https://github.com/NetCoreWebApps/Blog/blob/master/app/posts/_slug/edit.html) slug=markdown-example
+
+{{/markdown}}{{/raw}}
+
+    {{ { title, content } | addTo: initialPosts }}
+
+    ======================
+    Populate initial posts
+    ======================
+
+    {{#each initialPosts}}
+        {{ `INSERT INTO Post (Slug, Title, Content, Created, CreatedBy, Modified, ModifiedBy) 
+                      VALUES (@slug, @title, @content, ${sqlNow}, @user, ${sqlNow}, @user)`
+           | dbExec({ slug: generateSlug(title), title, content, user }) }}
+    {{/each}}
 
 {{/if}}
+
+{{ htmlError }}

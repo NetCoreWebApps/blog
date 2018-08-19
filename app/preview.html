@@ -1,5 +1,5 @@
 API /preview
-  - content : string - ServiceStack Templates to evaluate
+  * content : string - ServiceStack Templates to evaluate
 
 {{#capture response}}
     {{#eval {htmlDecode:true} }}{{ content }}{{/eval}}
