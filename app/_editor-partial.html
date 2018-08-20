@@ -116,9 +116,9 @@
 <script src="/editor.js"></script>
 <script>
 var editor = new Editor(document.querySelector(".editor"), {
-    save(e) {
-        let form = e.target.closest('form');
-        form.submit();
+    save() {
+        let form = this.target.closest('form');
+        form.querySelector('[type=submit]').click(); // form.submit() does not fire submit event
     }
 })
 </script>

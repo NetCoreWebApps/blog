@@ -5,10 +5,10 @@ function Editor($editor, opt) {
   let ops = {
     lang: opt.lang || "",
     target: $editor.querySelector("textarea"),
-    $emit(evt, value) {
+    $emit(evt, arg) {
       // input or save
       if (evt === "input") {
-        this.target.value = value;
+        this.target.value = arg;
         var event = new Event("input", {
           bubbles: true,
           cancelable: true
@@ -16,7 +16,7 @@ function Editor($editor, opt) {
         this.target.dispatchEvent(event);
       }
       if (opt[evt]) {
-        opt[evt].call(this, value);
+        opt[evt].call(this,arg);
       }
     },
     $nextTick(fn) {
@@ -457,7 +457,7 @@ function Editor($editor, opt) {
       }
   };
 
-  let ACTIVE_KEYS = '\t,z,b,n,h,i,q,l,k,<,>,s,/,?,1,0'.split(',');
+  let ACTIVE_KEYS = '\t,b,n,h,i,q,l,k,<,>,/,?,1,0'.split(',');
   ops.target.addEventListener('keydown', function(e){
     var isActiveKey = ACTIVE_KEYS.indexOf(e.key) >= 0;
     if (isActiveKey && (e.ctrlKey || e.altKey)) {
@@ -472,7 +472,9 @@ function Editor($editor, opt) {
     let cmd = el.getAttribute("data-cmd");
     el.addEventListener("click", function(e) {
       if (ops[cmd]) {
-        ops.ensureMarkdownBlock();
+        if (['save','undo','redo'].indexOf(cmd) === -1) {
+          ops.ensureMarkdownBlock();
+        }
         ops[cmd](e);
       }
     });
