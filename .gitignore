@@ -8,6 +8,10 @@
 *.user
 *.userosscache
 *.sln.docstates
+*.sqlite
+*.log
+GPUCache/
+blob_storage/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
@@ -286,4 +290,3 @@ __pycache__/
 *.btm.cs
 *.odx.cs
 *.xsd.cs
-app/blog.sqlite

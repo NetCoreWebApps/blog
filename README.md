@@ -1,13 +1,25 @@
-# Blog Web App
+# blog
 
-NET Core 2.1 Blog Web App.
+Blog is a minimal, multi-user Twitter OAuth blogging platform that can create living, powerful pages
 
-The `/app` folder contains the Blog Web App project.
+[![](https://raw.githubusercontent.com/NetCoreApps/TemplatePages/master/src/wwwroot/assets/img/screenshots/blog.png)](http://blog.web-app.io)
 
-The `/web` folder contains the [Web Apps binaries](https://github.com/NetCoreWebApps/Web).
+## Install
 
-See [templates.servicestack.net/docs/web-apps](http://templates.servicestack.net/docs/web-apps) to learn about ServiceStack Web Apps.
+Run as a Desktop App (Windows only):
 
-[![](http://templates.servicestack.net/assets/img/screenshots/blog.png)](http://blog.web-app.io)
+    $ dotnet tool install -g app
 
-> Live Demo: http://blog.web-app.io
+    $ app install blog
+    $ cd blog && app
+
+Run as a .NET Core Web App (Windows, macOS, Linux):
+
+    $ dotnet tool install -g web
+
+    $ web install blog
+    $ cd blog && web
+
+## Learn
+
+See [templates.servicestack.net/docs/web-apps](http://templates.servicestack.net/docs/web-apps) to learn about ServiceStack .NET Core 2.1 Web Apps.
