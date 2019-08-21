@@ -1,4 +1,10 @@
-# blog
+# This project has moved to
+
+### https://github.com/sharp-apps/blog
+
+---
+
+## blog
 
 Blog is a minimal, multi-user Twitter OAuth blogging platform that can create living, powerful pages
 
